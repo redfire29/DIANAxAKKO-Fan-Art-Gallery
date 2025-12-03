@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  ssr: false,
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
@@ -8,23 +9,8 @@ export default defineNuxtConfig({
     '@chettapong/nuxt-lodash',
     'nuxt-seo-utils',
   ],
-  tailwindcss: {
-    cssPath: [
-      '~/assets/css/main.css',
-      {
-        injectPosition: 'last'
-      },
-    ],
-  },
-  image: {
-    provider: 'cloudflare',
-    cloudflare: {
-      baseURL: 'https://images.upage.cool',
-    },
-    format: ['auto'],
-    densities: [1, 2],
-  },
   app: {
+    baseURL: '/DIANAxAKKO-Fan-Art-Gallery/',
     head: {
       htmlAttrs: {
         lang: 'zh-Hant',
@@ -44,5 +30,21 @@ export default defineNuxtConfig({
       ],
       script: [],
     }
+  },
+  tailwindcss: {
+    cssPath: [
+      '~/assets/css/main.css',
+      {
+        injectPosition: 'last'
+      },
+    ],
+  },
+  image: {
+    provider: 'cloudflare',
+    cloudflare: {
+      baseURL: 'https://images.upage.cool',
+    },
+    format: ['auto'],
+    densities: [1, 2],
   },
 })
