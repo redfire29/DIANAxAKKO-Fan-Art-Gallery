@@ -12,13 +12,11 @@ div(
 </template>
 
 <script setup>
-const mainStore = useStore();
 const route = useRoute();
-const basicData = useGet(mainStore, '$state.basicData');
 useHead({
   title: 'DIANAxAKKO Fan Art Gallery',
   link: [
-    { rel: 'canonical', href: computed(() => `${mainStore.$state.pageData.host}${route.fullPath}`) },
+    { rel: 'canonical', href: computed(() => `${route.fullPath}`) },
   ],
   meta: [
     { hid: 'og:url', property: 'og:url', content: computed(() => `${route.fullPath}`) },
