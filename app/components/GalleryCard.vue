@@ -6,6 +6,7 @@ div(
     img(
       :src="image.url",
       :alt="image.hashtags.join(', ')",
+      loading="lazy",
       class="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
     )
   div(class="p-4")
