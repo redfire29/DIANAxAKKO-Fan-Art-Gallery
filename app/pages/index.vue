@@ -3,8 +3,8 @@ div(class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8")
   div(class="max-w-7xl mx-auto")
     div(class="text-center mb-12")
       h1(class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl") DIANAxAKKO Fan Art Gallery
-      p(class="mt-5 max-w-xl mx-auto text-xl text-gray-500") 由於推特（Ｘ）的 HashTag 一直都沒修好, 導致查詢時會遺漏, 所以做了一個連結自己的粉絲畫的網站
-      p(class="mt-5 max-w-xl mx-auto text-xl text-gray-500") ツイッター（X）のハッシュタグがずっと直らなくて、検索すると漏れが出てしまうため、自分のファンアートをまとめたリンクサイトを作りました。
+      p(class="mt-5 max-w-xl mx-auto text-xl text-gray-500") 由於推特（Ｘ）的 HashTag 一直都沒修好, 導致查詢時會遺漏, 所以做了一個連結自己畫的粉絲圖的網站...
+      p(class="mt-5 max-w-xl mx-auto text-xl text-gray-500") Twitter（X）のハッシュタグがずっと直らなくて、検索するとどうしても抜け漏れが出ちゃうので、自分の描いたファンアートをまとめて見られるサイトを作りました……
     
     SearchBar(v-model="searchQuery")
     
