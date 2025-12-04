@@ -1,15 +1,21 @@
 <template lang="pug">
 div(
-  class="group relative overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform"
+  class="flex flex-col justify-between group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl p-2"
 )
-  div(class="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200 xl:aspect-w-7 xl:aspect-h-8")
-    img(
-      :src="image.url",
-      :alt="image.hashtags.join(', ')",
-      loading="lazy",
-      class="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
-    )
+  div(
+    class="flex-1 flex items-center px-2"
+  )
+    div(class="w-full overflow-hidden bg-gray-200 shadow-lg hover:shadow-xl")
+      img(
+        :src="image.url",
+        :alt="image.hashtags.join(', ')",
+        loading="lazy",
+        class="h-full w-full object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
+      )
   div(class="p-4")
+    p(
+      class="text-gray-500 text-xs mb-2"
+    ) {{ image.date }}
     div(class="flex flex-wrap gap-2 mb-3")
       button(
         v-for="tag in image.hashtags",
@@ -21,7 +27,7 @@ div(
       :href="image.link",
       target="_blank",
       rel="noopener noreferrer",
-      class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300"
+      class="inline-flex items-center justify-center w-full px-4 py-2 text-xs font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300"
     ) Twitter(X) Link
       svg(
         class="w-4 h-4 ml-2 -mr-1",
