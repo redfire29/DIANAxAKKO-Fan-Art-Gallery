@@ -40,10 +40,6 @@ export default defineNuxtConfig({
     ],
   },
   image: {
-    provider: 'cloudflare',
-    cloudflare: {
-      baseURL: 'https://images.upage.cool',
-    },
     format: ['auto'],
     densities: [1, 2],
   },

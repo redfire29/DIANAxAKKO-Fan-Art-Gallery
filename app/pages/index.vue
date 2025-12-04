@@ -1,24 +1,23 @@
 <template lang="pug">
 div(class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8")
-  div(class="max-w-7xl mx-auto")
+  div(class="max-w-7xl mx-auto 2xl:max-w-[1920px]")
     div(class="text-center mb-12")
       h1(class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl") DIANAxAKKO Fan Art Gallery
-      p(class="mt-5 max-w-xl mx-auto text-xl text-gray-500") 由於推特（Ｘ）的 HashTag 一直都沒修好, 導致查詢時會遺漏, 所以做了一個連結自己的粉絲畫的網站
-      p(class="mt-5 max-w-xl mx-auto text-xl text-gray-500") ツイッター（X）のハッシュタグがずっと直らなくて、検索すると漏れが出てしまうため、自分のファンアートをまとめたリンクサイトを作りました。
+      p(class="mt-5 max-w-4xl mx-auto text-xl text-gray-500") 由於推特（Ｘ）的 HashTag 一直都沒修好, 導致查詢時會遺漏, 所以做了一個連結自己的粉絲畫的網站
+      p(class="mt-5 max-w-4xl mx-auto text-xl text-gray-500") ツイッター（Ｘ）のハッシュタグがずっと直らなくて、検索すると漏れが出てしまうため、自分のファンアートをまとめたリンクサイトを作りました。
     
     SearchBar(v-model="searchQuery")
     
     div(
       v-if="filteredImages.length > 0",
-      class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"
+      class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-5 xl:gap-x-8"
     )
       GalleryCard(
         v-for="image in filteredImages",
-        :key="image.id",
+        :key="image.date",
         :image="image",
         @click-tag="handleTagClick"
       )
-    
     div(
       v-else,
       class="text-center py-12"
