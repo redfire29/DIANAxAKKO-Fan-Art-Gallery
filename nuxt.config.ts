@@ -17,6 +17,7 @@ export default defineNuxtConfig({
       },
       title: 'DIANAxAKKO Fan Art Gallery',
       meta: [
+        { name: 'google-site-verification', content: 'EnYs820u47SEuZ6hplICCXKzX1G4b1XFZuev2kZ5lNw' },
         { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
