@@ -1,5 +1,11 @@
 export const galleryImages = [
   {
+    date: '2025/12/09',
+    url: 'https://pbs.twimg.com/media/G7ud-s2a0AARtxT?format=jpg&name=small',
+    hashtags: ['月城様献上品', '2025'],
+    link: 'https://x.com/redfire299/status/1998365001833415017'
+  },
+  {
     date: '2025/12/07',
     url: 'https://pbs.twimg.com/media/G7h_lxeaAAAuGfB?format=jpg&name=small',
     hashtags: ['沐藝工坊', '2025'],
