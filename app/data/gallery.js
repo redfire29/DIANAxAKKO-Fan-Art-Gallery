@@ -1,5 +1,11 @@
 export const galleryImages = [
   {
+    date: '2025/12/12',
+    url: 'https://pbs.twimg.com/media/G75pp0QawAAiUE5?format=jpg&name=small',
+    hashtags: ['夢栞の展覧会', '2025'],
+    link: 'https://x.com/redfire299/status/1999151992195932259'
+  },
+  {
     date: '2025/12/10',
     url: 'https://pbs.twimg.com/media/G70GDxEaMAAB0lr?format=jpg&name=small',
     hashtags: ['うみコレオ', '2025'],
