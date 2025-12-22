@@ -66,7 +66,7 @@ watch(userIndices, (newVal) => {
   localStorage.setItem('yearly-gallery-indices', JSON.stringify(newVal));
 }, { deep: true });
 
-const availableYears = [...new Set(galleryImages.map(img => img.date.split('/')[0]))].sort((a, b) => b - a);
+const availableYears = [...new Set(galleryImages.map(img => img.date.split('/')[0]))].sort((a, b) => a - b);
 
 const yearlyTotalCount = computed(() => {
   return galleryImages.filter(img => img.date.startsWith(selectedYear.value)).length;
