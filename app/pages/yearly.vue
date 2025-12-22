@@ -1,6 +1,6 @@
 <template lang="pug">
 div(class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8")
-  div(class="max-w-7xl mx-auto")
+  div(class="max-w-7xl mx-auto 2xl:max-w-[1920px]")
     div(class="text-center mb-4")
       div(class="mb-6 flex justify-center gap-4")
         button(
