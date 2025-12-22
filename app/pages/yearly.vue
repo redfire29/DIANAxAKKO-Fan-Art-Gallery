@@ -36,7 +36,7 @@ div(class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8")
             )
             //- Hover overlay for cycle hint
             div(v-if="getMonthCount(month) > 1" class="absolute inset-0 bg-black/5 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center")
-              div(class="bg-white/90 px-3 py-1 rounded-full text-xs text-gray-600 shadow-sm") 點擊切換
+              div(class="bg-white/90 px-3 py-1 rounded-full text-xs text-gray-600 shadow-sm") Change
           div(v-else class="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50")
             span(class="text-sm italic font-light") No Art
         
