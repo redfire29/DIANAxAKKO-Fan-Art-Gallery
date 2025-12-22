@@ -5,7 +5,7 @@ div(class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8")
       h1(class="text-3xl font-extrabold text-gray-900 sm:text-4xl sm:tracking-tight lg:text-5xl") DIANAxAKKO Fan Art Gallery
       p(class="mt-5 max-w-4xl mx-auto text-base text-gray-500") 由於推特（Ｘ）的 HashTag 一直都沒修好, 導致查詢時會遺漏, 所以做了一個連結自己畫的粉絲圖的網站...
       p(class="mt-5 max-w-4xl mx-auto text-base text-gray-500") Twitter（X）のハッシュタグがずっと直らなくて、検索するとどうしても抜け漏れが出ちゃうので、自分の描いたファンアートをまとめて見られるサイトを作りました……
-      p(class="mt-1 max-w-4xl mx-auto text-[14px] text-blue-500") Updated: 2025/12/18
+      p(class="mt-1 max-w-4xl mx-auto text-[14px] text-blue-500") {{ `Updated: ${galleryImages[0].date}` }}
     div(
       class="sticky top-0 bg-gray-50 z-10 mb-8 py-4"
     )
