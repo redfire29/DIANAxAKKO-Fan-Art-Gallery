@@ -20,7 +20,7 @@ div(class="w-full mx-auto")
       type="search",
       :value="modelValue",
       @input="$emit('update:modelValue', $event.target.value)",
-      class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 shadow-sm hover:shadow-md",
+      class="block w-full py-2 pr-2 md:py-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 shadow-sm hover:shadow-md",
       placeholder="Fan art HashTag Search",
       required
     )
