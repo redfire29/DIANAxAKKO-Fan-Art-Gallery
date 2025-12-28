@@ -1,5 +1,11 @@
 export const galleryImages = [
   {
+    date: '2025/12/28',
+    url: 'https://pbs.twimg.com/media/G9QzHrIasAEnuf0?format=jpg&name=small',
+    hashtags: ['蘋安喜樂', '2025'],
+    link: 'https://x.com/redfire299/status/2005284344064270445'
+  },
+  {
     date: '2025/12/21',
     url: 'https://pbs.twimg.com/media/G8rMtavaQAAuADR?format=jpg&name=small',
     hashtags: ['しゆのアトリエ', '2025'],
