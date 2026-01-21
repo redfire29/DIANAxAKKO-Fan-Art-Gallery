@@ -1,5 +1,29 @@
 export const galleryImages = [
   {
+    date: '2026/01/22',
+    url: 'https://pbs.twimg.com/media/G_MqLUdbMAA8WjQ?format=jpg&name=small',
+    hashtags: ['うみコレオ', '2026'],
+    link: 'https://x.com/redfire299/status/2014005672724033749'
+  },
+  {
+    date: '2026/01/22',
+    url: 'https://pbs.twimg.com/media/G_MuD7yb0AApe7A?format=jpg&name=small',
+    hashtags: ['うみコレオ', '2026'],
+    link: 'https://x.com/redfire299/status/2014005677266456636'
+  },
+  {
+    date: '2026/01/22',
+    url: 'https://pbs.twimg.com/media/G_MucN4XgAAoU2h?format=jpg&name=small',
+    hashtags: ['うみコレオ', '2026'],
+    link: 'https://x.com/redfire299/status/2014005681255256151'
+  },
+  {
+    date: '2026/01/22',
+    url: 'https://pbs.twimg.com/media/G_Mu9MpXAAAePJc?format=jpg&name=small',
+    hashtags: ['うみコレオ', '2026'],
+    link: 'https://x.com/redfire299/status/2014005685089079365'
+  },
+  {
     date: '2026/01/02',
     url: 'https://pbs.twimg.com/media/G9q0URDaoAA55fm?format=jpg&name=small',
     hashtags: ['しゆのアトリエ', '2026'],
