@@ -1,25 +1,20 @@
 {
-  "name": "fan-art-gallery",
+  "name": "astro-svelte",
   "type": "module",
-  "private": true,
+  "version": "0.0.1",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "@nuxt/image": "^2.0.0",
-    "@pinia/nuxt": "^0.11.3",
-    "nuxt": "^4.2.1",
-    "nuxt-seo-utils": "^7.0.18",
-    "pug": "^3.0.3",
-    "vue": "^3.5.25",
-    "vue-router": "^4.6.3"
-  },
-  "devDependencies": {
-    "@chettapong/nuxt-lodash": "^2.5.4",
-    "@nuxtjs/tailwindcss": "7.0.0-beta.1"
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/svelte": "^7.2.5",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.17.1",
+    "svelte": "^5.49.1",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
   }
 }

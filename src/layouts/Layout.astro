@@ -1,0 +1,47 @@
+---
+import "../styles/global.css";
+
+const {
+    title = "DIANAxAKKO Fan Art Gallery",
+    description = "DIANAxAKKO Fan Art Gallery - 收集關於 DIANA 與 AKKO 的粉絲創作。",
+} = Astro.props;
+const pathname = Astro.url.pathname;
+---
+
+<html lang="zh-TW">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+    </head>
+    <body class="flex flex-col min-h-screen bg-gray-50">
+        <header class="bg-white shadow-sm z-20 sticky top-0">
+            <nav
+                class="max-w-7xl mx-auto 2xl:max-w-[1920px] px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+            >
+                <div class="flex items-center gap-8">
+                    <div class="flex gap-4">
+                        <a
+                            href="/"
+                            class={`text-sm font-medium transition-colors ${pathname === "/" ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
+                            >首頁</a
+                        >
+                        <a
+                            href="/yearly"
+                            class={`text-sm font-medium transition-colors ${pathname === "/yearly" ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
+                            >年度表</a
+                        >
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <main class="flex-1 w-full mx-auto">
+            <slot />
+        </main>
+    </body>
+</html>
