@@ -6,13 +6,23 @@ const {
     description = "DIANAxAKKO Fan Art Gallery - 收集關於 DIANA 與 AKKO 的粉絲創作。",
 } = Astro.props;
 const pathname = Astro.url.pathname;
+const base = import.meta.env.BASE_URL;
+const homeUrl = base;
+const yearlyUrl = base === "/" ? "/yearly" : `${base}/yearly`;
+
+const isHome = pathname === base || pathname === `${base}/`;
+const isYearly = pathname.startsWith(yearlyUrl);
 ---
 
 <html lang="zh-TW">
     <head>
         <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href={`${base === "/" ? "" : base}/favicon.svg`}
+        />
+        <link rel="icon" href={`${base === "/" ? "" : base}/favicon.ico`} />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
@@ -26,13 +36,13 @@ const pathname = Astro.url.pathname;
                 <div class="flex items-center gap-8">
                     <div class="flex gap-4">
                         <a
-                            href="/"
-                            class={`text-sm font-medium transition-colors ${pathname === "/" ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
+                            href={homeUrl}
+                            class={`text-sm font-medium transition-colors ${isHome ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
                             >首頁</a
                         >
                         <a
-                            href="/yearly"
-                            class={`text-sm font-medium transition-colors ${pathname === "/yearly" ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
+                            href={yearlyUrl}
+                            class={`text-sm font-medium transition-colors ${isYearly ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
                             >年度表</a
                         >
                     </div>
