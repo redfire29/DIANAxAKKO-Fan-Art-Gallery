@@ -1,5 +1,11 @@
 export const galleryImages = [
   {
+    date: '2026/03/15',
+    url: 'https://pbs.twimg.com/media/HDbp2SoaMAEW2CZ?format=jpg&name=small',
+    hashtags: ['うみコレオ', '2026'],
+    link: 'https://x.com/redfire299/status/2033070194726514808'
+  },
+  {
     date: '2026/03/08',
     url: 'https://pbs.twimg.com/media/HC4Xm6KacAAxUf0?format=jpg&name=small',
     hashtags: ['うみコレオ', '2026'],
