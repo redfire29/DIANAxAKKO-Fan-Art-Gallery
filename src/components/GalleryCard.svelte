@@ -6,7 +6,7 @@
 
 <div class="flex flex-col justify-between group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl p-2">
   <div class="flex-1 flex items-center px-2">
-    <div class="w-full overflow-hidden bg-gray-200 shadow-lg hover:shadow-xl">
+    <div class="w-full overflow-hidden bg-gray-200 shadow-lg hover:shadow-xl cursor-pointer" on:click={() => dispatch('click-image', image)}>
       <img
         src={image.url}
         alt={image.hashtags.join(', ')}

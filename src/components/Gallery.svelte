@@ -49,7 +49,44 @@
         "月城様献上品",
         "蘋安喜樂",
     ];
+
+    // Lightbox Logic
+    import { fade, fly } from 'svelte/transition';
+    let isModalOpen = false;
+    let selectedIndex = 0;
+
+    const openModal = (image) => {
+        selectedIndex = filteredImages.findIndex(img => img.url === image.url);
+        isModalOpen = true;
+        if (typeof document !== 'undefined') {
+            document.body.style.overflow = 'hidden';
+        }
+    };
+
+    const closeModal = () => {
+        isModalOpen = false;
+        if (typeof document !== 'undefined') {
+            document.body.style.overflow = 'auto';
+        }
+    };
+
+    const nextImage = () => {
+        selectedIndex = (selectedIndex + 1) % filteredImages.length;
+    };
+
+    const prevImage = () => {
+        selectedIndex = (selectedIndex - 1 + filteredImages.length) % filteredImages.length;
+    };
+
+    const handleKeydown = (event) => {
+        if (!isModalOpen) return;
+        if (event.key === 'Escape') closeModal();
+        if (event.key === 'ArrowRight') nextImage();
+        if (event.key === 'ArrowLeft') prevImage();
+    };
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <div class="min-h-screen bg-gray-50 py-12 px-2 md:px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto 2xl:max-w-[1920px]">
@@ -132,7 +169,11 @@
                 class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-5 xl:gap-x-8"
             >
                 {#each filteredImages as image (image.url)}
-                    <GalleryCard {image} on:click-tag={handleTagClick} />
+                    <GalleryCard 
+                        {image} 
+                        on:click-tag={handleTagClick} 
+                        on:click-image={(e) => openModal(e.detail)} 
+                    />
                 {/each}
             </div>
         {:else}
@@ -156,3 +197,91 @@
         {/if}
     </div>
 </div>
+
+{#if isModalOpen}
+    <!-- Modal Overlay -->
+    <div 
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all"
+        transition:fade={{ duration: 200 }}
+        on:click={closeModal}
+    >
+        <!-- Close Button -->
+        <button 
+            class="absolute top-6 right-6 p-2 text-white/70 hover:text-white transition-colors z-[60]"
+            on:click|stopPropagation={closeModal}
+        >
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Navigation Buttons -->
+        <button 
+            class="absolute left-4 md:left-8 p-3 text-white/50 hover:text-white transition-colors bg-white/10 hover:bg-white/20 rounded-full z-[60]"
+            on:click|stopPropagation={prevImage}
+        >
+            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+
+        <button 
+            class="absolute right-4 md:right-8 p-3 text-white/50 hover:text-white transition-colors bg-white/10 hover:bg-white/20 rounded-full z-[60]"
+            on:click|stopPropagation={nextImage}
+        >
+            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+
+        <!-- Content Area -->
+        <div 
+            class="relative max-w-[95vw] max-h-[90vh] flex flex-col items-center justify-center"
+            on:click|stopPropagation
+        >
+            {#key selectedIndex}
+                <div 
+                    class="relative"
+                    in:fly={{ y: 20, duration: 300, delay: 100 }}
+                    out:fade={{ duration: 200 }}
+                >
+                    <img 
+                        src={filteredImages[selectedIndex].url} 
+                        alt="Gallery Large View" 
+                        class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                    />
+                    
+                    <!-- Image Info Overlay -->
+                    <div class="mt-4 text-center">
+                        <div class="flex items-center justify-center gap-4 mb-2">
+                            <span class="text-white font-medium text-lg">
+                                {filteredImages[selectedIndex].date}
+                            </span>
+                            <a 
+                                href={filteredImages[selectedIndex].link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-full transition-all hover:scale-105"
+                            >
+                                Twitter (X)
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            {#each filteredImages[selectedIndex].hashtags as tag}
+                                <span class="px-2 py-0.5 bg-white/10 text-white/80 rounded text-xs">
+                                    #{tag}
+                                </span>
+                            {/each}
+                        </div>
+                        <p class="text-white/40 text-xs mt-4">
+                            {selectedIndex + 1} / {filteredImages.length}
+                        </p>
+                    </div>
+                </div>
+            {/key}
+        </div>
+    </div>
+{/if}
