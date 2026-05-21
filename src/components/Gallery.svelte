@@ -39,16 +39,20 @@
         searchQuery = tag;
     };
 
-    const hashtags = [
-        "うみコレオ",
-        "しゆのアトリエ",
-        "あか絵るら",
-        "夢栞の展覧会",
-        "沐藝工坊",
-        "Shinn手拈來",
-        "月城様献上品",
-        "蘋安喜樂",
-    ];
+    $: hashtags = (() => {
+        const yearImages = galleryImages.filter((image) => {
+            return selectedYear === "全部年份" || image.date.startsWith(selectedYear);
+        });
+        const tagCounts = {};
+        yearImages.forEach((image) => {
+            image.hashtags.forEach((tag) => {
+                if (!/^\d+$/.test(tag)) {
+                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                }
+            });
+        });
+        return Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
+    })();
 
     // Lightbox Logic
     import { fade, fly } from 'svelte/transition';
