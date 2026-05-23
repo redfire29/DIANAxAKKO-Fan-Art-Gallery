@@ -175,7 +175,7 @@
                 Updated: {galleryImages[0].date}
             </p>
         </div>
-        <div class="sticky top-[64px] backdrop-blur-md bg-gray-50/80 z-20 mb-8 py-4 border-b border-gray-200/40">
+        <div class="mb-8 py-4 border-b border-gray-200/40">
             <div class="mx-auto px-4">
                 <div class="flex flex-wrap gap-4 mb-4">
                     <div
