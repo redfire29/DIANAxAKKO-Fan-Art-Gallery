@@ -2,7 +2,11 @@
     import { onMount } from "svelte";
     import { galleryImages } from "../data/gallery";
 
-    let selectedYear = "2025";
+    const availableYears = [
+        ...new Set(galleryImages.map((img) => img.date.split("/")[0])),
+    ].sort((a, b) => a - b);
+
+    let selectedYear = availableYears.length > 0 ? availableYears[availableYears.length - 1] : new Date().getFullYear().toString();
     let userIndices = {};
 
     // Load persisted indices from localStorage
@@ -24,10 +28,6 @@
             JSON.stringify(userIndices),
         );
     }
-
-    const availableYears = [
-        ...new Set(galleryImages.map((img) => img.date.split("/")[0])),
-    ].sort((a, b) => a - b);
 
     $: yearlyTotalCount = galleryImages.filter((img) =>
         img.date.startsWith(selectedYear),
