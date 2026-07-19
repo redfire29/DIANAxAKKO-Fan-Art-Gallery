@@ -1,9 +1,8 @@
 <script>
     import { galleryImages } from "../data/gallery";
     import GalleryCard from "./GalleryCard.svelte";
-    import SearchBar from "./SearchBar.svelte";
 
-    let searchQuery = "";
+    let selectedTags = [];
     let selectedYear = "全部年份";
     let innerWidth = 1200;
 
@@ -35,11 +34,11 @@
             return false;
         }
         // Search/Tag filter
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            if (
-                !image.hashtags.some((tag) => tag.toLowerCase().includes(query))
-            ) {
+        if (selectedTags.length > 0) {
+            const hasAnyTag = selectedTags.some(tag => 
+                image.hashtags.some(imgTag => imgTag.toLowerCase() === tag.toLowerCase())
+            );
+            if (!hasAnyTag) {
                 return false;
             }
         }
@@ -49,17 +48,17 @@
     const handleTagClick = (event) => {
         // Custom event detail or direct tag
         const tag = event.detail;
-        if (searchQuery === tag) {
-            searchQuery = "";
-        } else {
-            searchQuery = tag;
-        }
+        toggleTag(tag);
     };
     const handleTagClickDirect = (tag) => {
-        if (searchQuery === tag) {
-            searchQuery = "";
+        toggleTag(tag);
+    };
+
+    const toggleTag = (tag) => {
+        if (selectedTags.includes(tag)) {
+            selectedTags = selectedTags.filter(t => t !== tag);
         } else {
-            searchQuery = tag;
+            selectedTags = [...selectedTags, tag];
         }
     };
 
@@ -211,15 +210,31 @@
                         </select>
                     </div>
 
-                    <div class="flex-1 min-w-[100px] md:min-w-[200px]">
-                        <SearchBar bind:value={searchQuery} />
+                    <div class="flex-1 min-w-[100px] md:min-w-[200px] flex items-center gap-2 flex-wrap">
+                        {#if selectedTags.length === 0}
+                            <span class="text-sm text-gray-400">請選擇下方標籤進行篩選</span>
+                        {:else}
+                            {#each selectedTags as tag (tag)}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                    #{tag}
+                                    <button 
+                                        type="button" 
+                                        class="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                        on:click={() => toggleTag(tag)}
+                                    >
+                                        <span class="sr-only">移除 {tag}</span>
+                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                    </button>
+                                </span>
+                            {/each}
+                        {/if}
                     </div>
 
-                    {#if selectedYear !== "全部年份" || searchQuery !== ""}
+                    {#if selectedYear !== "全部年份" || selectedTags.length > 0}
                         <button
                             on:click={() => {
                                 selectedYear = "全部年份";
-                                searchQuery = "";
+                                selectedTags = [];
                             }}
                             title="清除所有篩選"
                             aria-label="清除所有篩選"
@@ -239,10 +254,10 @@
                         <li>
                             <button
                                 on:click={() => handleTagClickDirect(tag)}
-                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 {searchQuery === tag ? 'bg-blue-600 text-white shadow-sm scale-105' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-all duration-200 {selectedTags.includes(tag) ? 'bg-blue-600 text-white shadow-sm scale-105' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}"
                             >
                                 #{tag}
-                                {#if searchQuery === tag}
+                                {#if selectedTags.includes(tag)}
                                     <span class="ml-1.5 text-[10px] opacity-80">✕</span>
                                 {/if}
                             </button>
