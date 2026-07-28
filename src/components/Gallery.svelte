@@ -2,30 +2,30 @@
     import { galleryImages } from "../data/gallery";
     import GalleryCard from "./GalleryCard.svelte";
 
-    let selectedTags = [];
-    let selectedYear = "全部年份";
-    let innerWidth = 1200;
+    let selectedTags = $state([]);
+    let selectedYear = $state("全部年份");
+    let innerWidth = $state(1200);
 
-    $: columnCount = (() => {
+    let columnCount = $derived((() => {
         if (innerWidth >= 1280) return 5;
         if (innerWidth >= 1024) return 3;
         if (innerWidth >= 640) return 2;
         return 1;
-    })();
+    })());
 
-    $: columns = (() => {
+    let columns = $derived((() => {
         const cols = Array.from({ length: columnCount }, () => []);
         filteredImages.forEach((image, index) => {
             cols[index % columnCount].push(image);
         });
         return cols;
-    })();
+    })());
 
     const availableYears = [
         ...new Set(galleryImages.map((img) => img.date.split("/")[0])),
     ].sort((a, b) => b - a);
 
-    $: filteredImages = galleryImages.filter((image) => {
+    let filteredImages = $derived(galleryImages.filter((image) => {
         // Year filter
         if (
             selectedYear !== "全部年份" &&
@@ -43,7 +43,7 @@
             }
         }
         return true;
-    });
+    }));
 
     const handleTagClick = (event) => {
         // Custom event detail or direct tag
@@ -62,7 +62,7 @@
         }
     };
 
-    $: hashtags = (() => {
+    let hashtags = $derived((() => {
         const yearImages = galleryImages.filter((image) => {
             return selectedYear === "全部年份" || image.date.startsWith(selectedYear);
         });
@@ -75,12 +75,12 @@
             });
         });
         return Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
-    })();
+    })());
 
     // Lightbox Logic
     import { fade, fly } from 'svelte/transition';
-    let isModalOpen = false;
-    let selectedIndex = 0;
+    let isModalOpen = $state(false);
+    let selectedIndex = $state(0);
 
     // 將 Twitter 縮圖轉換為高畫質原圖
     const getHighResUrl = (url) => {
@@ -89,10 +89,18 @@
     };
 
     // 行動端滑動手勢
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
+    let touchStartX = $state(0);
+    let touchStartY = $state(0);
+    let touchEndX = $state(0);
+    let touchEndY = $state(0);
+
+    let scrollY = $state(0);
+
+    const scrollToTop = () => {
+        if (typeof window !== 'undefined') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
 
     const handleTouchStart = (e) => {
         touchStartX = e.changedTouches[0].screenX;
@@ -153,7 +161,7 @@
     };
 </script>
 
-<svelte:window bind:innerWidth on:keydown={handleKeydown} />
+<svelte:window bind:innerWidth bind:scrollY on:keydown={handleKeydown} />
 
 <div class="min-h-screen bg-gray-50 py-12 px-2 md:px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto 2xl:max-w-[1920px]">
@@ -302,6 +310,20 @@
     </div>
 </div>
 
+{#if scrollY > 500}
+    <button
+        class="fixed bottom-6 right-6 md:bottom-8 md:right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-300 z-40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center group"
+        on:click={scrollToTop}
+        in:fly={{ y: 20, duration: 300 }}
+        out:fade={{ duration: 200 }}
+        aria-label="Back to top"
+    >
+        <svg class="w-6 h-6 transform group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
+{/if}
+
 {#if isModalOpen}
     <!-- Modal Overlay -->
     <div 
@@ -351,14 +373,20 @@
                     in:fly={{ y: 20, duration: 300, delay: 100 }}
                     out:fade={{ duration: 200 }}
                 >
-                    <img 
-                        src={getHighResUrl(filteredImages[selectedIndex].url)} 
-                        alt="Gallery Large View" 
-                        class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-                    />
+                    <div class="relative">
+                        <!-- Navigation Click Areas -->
+                        <div class="absolute inset-y-0 left-0 w-1/2 z-20 cursor-pointer" on:click|stopPropagation={prevImage} aria-label="Previous image"></div>
+                        <div class="absolute inset-y-0 right-0 w-1/2 z-20 cursor-pointer" on:click|stopPropagation={nextImage} aria-label="Next image"></div>
+
+                        <img 
+                            src={getHighResUrl(filteredImages[selectedIndex].url)} 
+                            alt="Gallery Large View" 
+                            class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl relative z-10"
+                        />
+                    </div>
                     
                     <!-- Image Info Overlay -->
-                    <div class="mt-4 text-center">
+                    <div class="mt-4 text-center relative z-30">
                         <div class="flex items-center justify-center gap-4 mb-2">
                             <span class="text-white font-medium text-lg">
                                 {filteredImages[selectedIndex].date}

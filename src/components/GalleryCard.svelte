@@ -1,17 +1,22 @@
 <script>
-  export let image;
+  let { image } = $props();
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
+  let loaded = $state(false);
 </script>
 
 <div class="flex flex-col justify-between group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl p-2 bg-white border border-gray-100/80 transition-all duration-300">
   <div class="flex-1 flex items-center px-1 py-1">
-    <div class="w-full overflow-hidden bg-gray-100 rounded-lg cursor-pointer" on:click={() => dispatch('click-image', image)}>
+    <div class="w-full relative overflow-hidden bg-gray-100 rounded-lg cursor-pointer min-h-[150px]" onclick={() => dispatch('click-image', image)}>
+      {#if !loaded}
+        <div class="absolute inset-0 bg-gray-200 animate-pulse"></div>
+      {/if}
       <img
         src={image.url}
         alt={image.hashtags.join(', ')}
         loading="lazy"
-        class="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-300"
+        onload={() => loaded = true}
+        class="w-full h-auto block transition-all duration-500 group-hover:scale-[1.02] {loaded ? 'opacity-100' : 'opacity-0'}"
       />
     </div>
   </div>
@@ -20,7 +25,7 @@
     <div class="flex flex-wrap gap-1.5 mb-3">
       {#each image.hashtags as tag (tag)}
         <button
-          on:click={() => dispatch('click-tag', tag)}
+          onclick={() => dispatch('click-tag', tag)}
           class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 cursor-pointer transition-colors duration-200"
         >
           #{tag}

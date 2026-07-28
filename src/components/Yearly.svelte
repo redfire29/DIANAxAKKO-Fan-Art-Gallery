@@ -6,8 +6,8 @@
         ...new Set(galleryImages.map((img) => img.date.split("/")[0])),
     ].sort((a, b) => a - b);
 
-    let selectedYear = availableYears.length > 0 ? availableYears[availableYears.length - 1] : new Date().getFullYear().toString();
-    let userIndices = {};
+    let selectedYear = $state(availableYears.length > 0 ? availableYears[availableYears.length - 1] : new Date().getFullYear().toString());
+    let userIndices = $state({});
 
     // Load persisted indices from localStorage
     onMount(() => {
@@ -22,16 +22,18 @@
     });
 
     // Update localStorage when indices change - handled via reactive statement below
-    $: if (typeof localStorage !== "undefined") {
-        localStorage.setItem(
-            "yearly-gallery-indices",
-            JSON.stringify(userIndices),
-        );
-    }
+    $effect(() => {
+        if (typeof localStorage !== "undefined") {
+            localStorage.setItem(
+                "yearly-gallery-indices",
+                JSON.stringify(userIndices),
+            );
+        }
+    });
 
-    $: yearlyTotalCount = galleryImages.filter((img) =>
+    let yearlyTotalCount = $derived(galleryImages.filter((img) =>
         img.date.startsWith(selectedYear),
-    ).length;
+    ).length);
 
     const getMonthData = (month, year = selectedYear) => {
         const monthStr = month.toString().padStart(2, "0");
@@ -97,9 +99,9 @@
 
     // Lightbox Logic for Yearly Gallery
     import { fade, fly } from 'svelte/transition';
-    let isModalOpen = false;
-    let selectedModalImageIndex = 0;
-    let modalImages = [];
+    let isModalOpen = $state(false);
+    let selectedModalImageIndex = $state(0);
+    let modalImages = $state([]);
 
     const getHighResUrl = (url) => {
         if (!url) return "";
@@ -139,10 +141,12 @@
     };
 
     // 行動端滑動手勢
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
+    let touchStartX = $state(0);
+    let touchStartY = $state(0);
+    let touchEndX = $state(0);
+    let touchEndY = $state(0);
+    
+    let imageLoadStatus = $state({});
 
     const handleTouchStart = (e) => {
         touchStartX = e.changedTouches[0].screenX;
@@ -234,6 +238,9 @@
                         class="aspect-square relative overflow-hidden bg-gray-100 group/img border-t border-gray-100/50"
                     >
                         {#if getMonthThumbnail(month, selectedYear, userIndices)}
+                            {#if !imageLoadStatus[`${selectedYear}-${month}`]}
+                                <div class="absolute inset-0 bg-gray-200 animate-pulse z-0"></div>
+                            {/if}
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                             <img
@@ -243,8 +250,9 @@
                                     userIndices,
                                 )}
                                 alt="{month}月"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105 cursor-pointer"
+                                class="w-full h-full object-cover transition-all duration-500 group-hover/img:scale-105 cursor-pointer relative z-10 {imageLoadStatus[`${selectedYear}-${month}`] ? 'opacity-100' : 'opacity-0'}"
                                 loading="lazy"
+                                on:load={() => imageLoadStatus[`${selectedYear}-${month}`] = true}
                                 on:click={() => openModalForMonth(month)}
                             />
                             
@@ -337,14 +345,22 @@
                     in:fly={{ y: 20, duration: 300, delay: 100 }}
                     out:fade={{ duration: 200 }}
                 >
-                    <img 
-                        src={getHighResUrl(modalImages[selectedModalImageIndex].url)} 
-                        alt="Gallery Large View" 
-                        class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-                    />
+                    <div class="relative">
+                        <!-- Navigation Click Areas -->
+                        {#if modalImages.length > 1}
+                            <div class="absolute inset-y-0 left-0 w-1/2 z-20 cursor-pointer" on:click|stopPropagation={prevImage} aria-label="Previous image"></div>
+                            <div class="absolute inset-y-0 right-0 w-1/2 z-20 cursor-pointer" on:click|stopPropagation={nextImage} aria-label="Next image"></div>
+                        {/if}
+
+                        <img 
+                            src={getHighResUrl(modalImages[selectedModalImageIndex].url)} 
+                            alt="Gallery Large View" 
+                            class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl relative z-10"
+                        />
+                    </div>
                     
                     <!-- Image Info Overlay -->
-                    <div class="mt-4 text-center text-white">
+                    <div class="mt-4 text-center text-white relative z-30">
                         <div class="flex items-center justify-center gap-4 mb-2">
                             <span class="font-medium text-lg">
                                 {modalImages[selectedModalImageIndex].date}
