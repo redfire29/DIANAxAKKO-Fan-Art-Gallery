@@ -1,18 +1,44 @@
 <script>
-  export let image;
+  let { image } = $props();
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
+  let loaded = $state(false);
+
+  let isYoutube = $derived(image.type === 'youtube');
+  let imgUrl = $derived(isYoutube ? `https://img.youtube.com/vi/${image.youtubeId}/hqdefault.jpg` : image.url);
+  let linkUrl = $derived(isYoutube ? `https://www.youtube.com/shorts/${image.youtubeId}` : image.link);
+
+  const handleImageClick = () => {
+    if (isYoutube) {
+      window.open(linkUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      dispatch('click-image', image);
+    }
+  };
 </script>
 
 <div class="flex flex-col justify-between group relative overflow-hidden rounded-xl shadow-md hover:shadow-xl p-2 bg-white border border-gray-100/80 transition-all duration-300">
   <div class="flex-1 flex items-center px-1 py-1">
-    <div class="w-full overflow-hidden bg-gray-100 rounded-lg cursor-pointer" on:click={() => dispatch('click-image', image)}>
+    <div class="w-full relative overflow-hidden bg-gray-100 rounded-lg cursor-pointer min-h-[150px]" onclick={handleImageClick}>
+      {#if !loaded}
+        <div class="absolute inset-0 bg-gray-200 animate-pulse"></div>
+      {/if}
       <img
-        src={image.url}
+        src={imgUrl}
         alt={image.hashtags.join(', ')}
         loading="lazy"
-        class="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-300"
+        onload={() => loaded = true}
+        class="w-full h-auto block transition-all duration-500 group-hover:scale-[1.02] {loaded ? 'opacity-100' : 'opacity-0'}"
       />
+      {#if isYoutube}
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10 transition-transform duration-500 group-hover:scale-[1.05]">
+          <div class="w-12 h-12 bg-black/60 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-red-600 transition-colors duration-300 shadow-lg">
+            <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      {/if}
     </div>
   </div>
   <div class="p-3">
@@ -20,7 +46,7 @@
     <div class="flex flex-wrap gap-1.5 mb-3">
       {#each image.hashtags as tag (tag)}
         <button
-          on:click={() => dispatch('click-tag', tag)}
+          onclick={() => dispatch('click-tag', tag)}
           class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 cursor-pointer transition-colors duration-200"
         >
           #{tag}
@@ -28,12 +54,16 @@
       {/each}
     </div>
     <a
-      href={image.link}
+      href={linkUrl}
       target="_blank"
       rel="noopener noreferrer"
       class="inline-flex items-center justify-center w-full px-3 py-2 text-xs font-semibold text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
     >
-      Twitter(X) Link
+      {#if isYoutube}
+        YouTube Shorts
+      {:else}
+        Twitter(X) Link
+      {/if}
       <svg class="w-4 h-4 ml-1.5 -mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
       </svg>

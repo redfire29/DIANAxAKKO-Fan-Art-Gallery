@@ -6,6 +6,12 @@ export const galleryImages = [
     link: 'https://x.com/redfire299/status/2086109928310407331'
   },
   {
+    date: '2026/07/20',
+    type: 'youtube',
+    youtubeId: 'lJ1WHlZIqUg',
+    hashtags: ['うみコレオ', '2026']
+  },
+  {
     date: '2026/07/19',
     url: 'https://pbs.twimg.com/media/HNmUMKFa4AAbJXY?format=jpg&name=small',
     hashtags: ['うみコレオ', '2026'],

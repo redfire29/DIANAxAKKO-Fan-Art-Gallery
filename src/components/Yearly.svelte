@@ -6,8 +6,8 @@
         ...new Set(galleryImages.map((img) => img.date.split("/")[0])),
     ].sort((a, b) => a - b);
 
-    let selectedYear = availableYears.length > 0 ? availableYears[availableYears.length - 1] : new Date().getFullYear().toString();
-    let userIndices = {};
+    let selectedYear = $state(availableYears.length > 0 ? availableYears[availableYears.length - 1] : new Date().getFullYear().toString());
+    let userIndices = $state({});
 
     // Load persisted indices from localStorage
     onMount(() => {
@@ -22,16 +22,18 @@
     });
 
     // Update localStorage when indices change - handled via reactive statement below
-    $: if (typeof localStorage !== "undefined") {
-        localStorage.setItem(
-            "yearly-gallery-indices",
-            JSON.stringify(userIndices),
-        );
-    }
+    $effect(() => {
+        if (typeof localStorage !== "undefined") {
+            localStorage.setItem(
+                "yearly-gallery-indices",
+                JSON.stringify(userIndices),
+            );
+        }
+    });
 
-    $: yearlyTotalCount = galleryImages.filter((img) =>
+    let yearlyTotalCount = $derived(galleryImages.filter((img) =>
         img.date.startsWith(selectedYear),
-    ).length;
+    ).length);
 
     const getMonthData = (month, year = selectedYear) => {
         const monthStr = month.toString().padStart(2, "0");
@@ -58,7 +60,8 @@
 
         // Ensure index is within bounds if data changed
         const safeIndex = index % data.length;
-        return data[safeIndex].url;
+        const img = data[safeIndex];
+        return img.type === 'youtube' ? `https://img.youtube.com/vi/${img.youtubeId}/hqdefault.jpg` : img.url;
     };
 
     const cycleImage = (month) => {
@@ -97,9 +100,9 @@
 
     // Lightbox Logic for Yearly Gallery
     import { fade, fly } from 'svelte/transition';
-    let isModalOpen = false;
-    let selectedModalImageIndex = 0;
-    let modalImages = [];
+    let isModalOpen = $state(false);
+    let selectedModalImageIndex = $state(0);
+    let modalImages = $state([]);
 
     const getHighResUrl = (url) => {
         if (!url) return "";
@@ -139,10 +142,12 @@
     };
 
     // 行動端滑動手勢
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
+    let touchStartX = $state(0);
+    let touchStartY = $state(0);
+    let touchEndX = $state(0);
+    let touchEndY = $state(0);
+    
+    let imageLoadStatus = $state({});
 
     const handleTouchStart = (e) => {
         touchStartX = e.changedTouches[0].screenX;
@@ -234,19 +239,33 @@
                         class="aspect-square relative overflow-hidden bg-gray-100 group/img border-t border-gray-100/50"
                     >
                         {#if getMonthThumbnail(month, selectedYear, userIndices)}
+                            {#if !imageLoadStatus[`${selectedYear}-${month}`]}
+                                <div class="absolute inset-0 bg-gray-200 animate-pulse z-0"></div>
+                            {/if}
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                            <img
-                                src={getMonthThumbnail(
-                                    month,
-                                    selectedYear,
-                                    userIndices,
-                                )}
-                                alt="{month}月"
-                                class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105 cursor-pointer"
-                                loading="lazy"
-                                on:click={() => openModalForMonth(month)}
-                            />
+                            <div class="w-full h-full relative" on:click={() => openModalForMonth(month)}>
+                                <img
+                                    src={getMonthThumbnail(
+                                        month,
+                                        selectedYear,
+                                        userIndices,
+                                    )}
+                                    alt="{month}月"
+                                    class="w-full h-full object-cover transition-all duration-500 group-hover/img:scale-105 cursor-pointer relative z-10 {imageLoadStatus[`${selectedYear}-${month}`] ? 'opacity-100' : 'opacity-0'}"
+                                    loading="lazy"
+                                    on:load={() => imageLoadStatus[`${selectedYear}-${month}`] = true}
+                                />
+                                {#if getMonthData(month, selectedYear)[(userIndices[`${selectedYear}-${month}`] || 0) % getMonthData(month, selectedYear).length].type === 'youtube'}
+                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+                                        <div class="w-10 h-10 bg-black/60 rounded-full flex items-center justify-center backdrop-blur-sm group-hover/img:bg-red-600 transition-colors shadow-lg">
+                                            <svg class="w-5 h-5 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M8 5v14l11-7z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                {/if}
+                            </div>
                             
                             <!-- 左右輪播微型按鈕 (當圖片張數 > 1 時) -->
                             {#if getMonthCount(month, selectedYear) > 1}
@@ -337,25 +356,58 @@
                     in:fly={{ y: 20, duration: 300, delay: 100 }}
                     out:fade={{ duration: 200 }}
                 >
-                    <img 
-                        src={getHighResUrl(modalImages[selectedModalImageIndex].url)} 
-                        alt="Gallery Large View" 
-                        class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-                    />
+                    <div class="relative">
+                        <!-- Navigation Click Areas -->
+                        {#if modalImages.length > 1 && modalImages[selectedModalImageIndex].type !== 'youtube'}
+                            <div class="absolute inset-y-0 left-0 w-1/2 z-20 cursor-pointer" on:click|stopPropagation={prevImage} aria-label="Previous image"></div>
+                            <div class="absolute inset-y-0 right-0 w-1/2 z-20 cursor-pointer" on:click|stopPropagation={nextImage} aria-label="Next image"></div>
+                        {/if}
+
+                        {#if modalImages[selectedModalImageIndex].type === 'youtube'}
+                            <div class="relative w-full h-[80vh] flex items-center justify-center bg-black/50 rounded-lg shadow-2xl z-10 cursor-pointer overflow-hidden" on:click|stopPropagation={() => window.open(`https://www.youtube.com/shorts/${modalImages[selectedModalImageIndex].youtubeId}`, '_blank')}>
+                                <img 
+                                    src={`https://img.youtube.com/vi/${modalImages[selectedModalImageIndex].youtubeId}/hqdefault.jpg`} 
+                                    alt="Gallery Large View" 
+                                    class="max-w-full max-h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity"
+                                />
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+                                    <button 
+                                        class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-pointer pointer-events-auto"
+                                        on:click|stopPropagation={() => window.open(`https://www.youtube.com/shorts/${modalImages[selectedModalImageIndex].youtubeId}`, '_blank')}
+                                        aria-label="Play on YouTube"
+                                    >
+                                        <svg class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        {:else}
+                            <img 
+                                src={getHighResUrl(modalImages[selectedModalImageIndex].url)} 
+                                alt="Gallery Large View" 
+                                class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl relative z-10"
+                            />
+                        {/if}
+                    </div>
                     
                     <!-- Image Info Overlay -->
-                    <div class="mt-4 text-center text-white">
+                    <div class="mt-4 text-center text-white relative z-30">
                         <div class="flex items-center justify-center gap-4 mb-2">
                             <span class="font-medium text-lg">
                                 {modalImages[selectedModalImageIndex].date}
                             </span>
                             <a 
-                                href={modalImages[selectedModalImageIndex].link} 
+                                href={modalImages[selectedModalImageIndex].type === 'youtube' ? `https://www.youtube.com/shorts/${modalImages[selectedModalImageIndex].youtubeId}` : modalImages[selectedModalImageIndex].link} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-full transition-all hover:scale-105"
                             >
-                                Twitter (X)
+                                {#if modalImages[selectedModalImageIndex].type === 'youtube'}
+                                    YouTube Shorts
+                                {:else}
+                                    Twitter (X)
+                                {/if}
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
