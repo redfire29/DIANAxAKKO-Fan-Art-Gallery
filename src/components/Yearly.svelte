@@ -245,17 +245,26 @@
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                             <div class="w-full h-full relative" on:click={() => openModalForMonth(month)}>
-                                <img
-                                    src={getMonthThumbnail(
-                                        month,
-                                        selectedYear,
-                                        userIndices,
-                                    )}
-                                    alt="{month}月"
-                                    class="w-full h-full object-cover transition-all duration-500 group-hover/img:scale-105 cursor-pointer relative z-10 {imageLoadStatus[`${selectedYear}-${month}`] ? 'opacity-100' : 'opacity-0'}"
-                                    loading="lazy"
-                                    on:load={() => imageLoadStatus[`${selectedYear}-${month}`] = true}
-                                />
+                                {#if getMonthData(month, selectedYear)[(userIndices[`${selectedYear}-${month}`] || 0) % getMonthData(month, selectedYear).length].type === 'video'}
+                                    <video
+                                        src={getMonthThumbnail(month, selectedYear, userIndices)}
+                                        class="w-full h-full object-cover transition-all duration-500 group-hover/img:scale-105 cursor-pointer relative z-10 {imageLoadStatus[`${selectedYear}-${month}`] ? 'opacity-100' : 'opacity-0'}"
+                                        autoplay loop muted playsinline
+                                        on:loadeddata={() => imageLoadStatus[`${selectedYear}-${month}`] = true}
+                                    ></video>
+                                {:else}
+                                    <img
+                                        src={getMonthThumbnail(
+                                            month,
+                                            selectedYear,
+                                            userIndices,
+                                        )}
+                                        alt="{month}月"
+                                        class="w-full h-full object-cover transition-all duration-500 group-hover/img:scale-105 cursor-pointer relative z-10 {imageLoadStatus[`${selectedYear}-${month}`] ? 'opacity-100' : 'opacity-0'}"
+                                        loading="lazy"
+                                        on:load={() => imageLoadStatus[`${selectedYear}-${month}`] = true}
+                                    />
+                                {/if}
                                 {#if getMonthData(month, selectedYear)[(userIndices[`${selectedYear}-${month}`] || 0) % getMonthData(month, selectedYear).length].type === 'youtube'}
                                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
                                         <div class="w-10 h-10 bg-black/60 rounded-full flex items-center justify-center backdrop-blur-sm group-hover/img:bg-red-600 transition-colors shadow-lg">
@@ -382,6 +391,13 @@
                                     </button>
                                 </div>
                             </div>
+                        {:else if modalImages[selectedModalImageIndex].type === 'video'}
+                            <!-- svelte-ignore a11y-media-has-caption -->
+                            <video 
+                                src={modalImages[selectedModalImageIndex].url} 
+                                class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl relative z-10"
+                                autoplay loop muted playsinline
+                            ></video>
                         {:else}
                             <img 
                                 src={getHighResUrl(modalImages[selectedModalImageIndex].url)} 
