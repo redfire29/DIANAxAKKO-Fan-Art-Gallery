@@ -1,5 +1,11 @@
 export const galleryImages = [
   {
+    date: '2026/08/23',
+    url: 'https://pbs.twimg.com/media/HQZPa2YagAALwhr?format=jpg&name=small',
+    hashtags: ['うみコレオ', '2026'],
+    link: 'https://x.com/redfire299/status/2091446470897783034'
+  },
+  {
     date: '2026/08/11',
     url: '/DIANAxAKKO-Fan-Art-Gallery/20260811.gif',
     hashtags: ['うみコレオ', '2026'],
