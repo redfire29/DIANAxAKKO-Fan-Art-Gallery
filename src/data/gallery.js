@@ -1,5 +1,11 @@
 export const galleryImages = [
   {
+    date: '2026/11/1',
+    url: '/DIANAxAKKO-Fan-Art-Gallery/gallery/20261101-HV-EsiSaQAA4cpL.webp',
+    hashtags: ['うみコレオ', '2026'],
+    link: 'https://x.com/redfire299/status/2116556324565897647'
+  },
+  {
     date: '2026/10/1',
     url: '/DIANAxAKKO-Fan-Art-Gallery/gallery/20261001-HTeTB7kboAA7V7r.webp',
     hashtags: ['うみコレオ', '2026'],
