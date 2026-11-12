@@ -1,8 +1,32 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Gallery from "../components/Gallery.svelte";
+import { galleryImages } from "../data/gallery";
+
+const lastUpdated = galleryImages[0]?.date ?? "";
 ---
 
 <Layout>
-	<Gallery client:only="svelte" />
+	<section class="pt-8 sm:pt-12 px-4 sm:px-6 lg:px-8">
+		<div class="max-w-7xl mx-auto 2xl:max-w-[1920px] text-center mb-8">
+			<h1
+				class="text-3xl font-extrabold text-gray-900 sm:text-4xl sm:tracking-tight lg:text-5xl"
+			>
+				DIANAxAKKO Fan Art Gallery
+			</h1>
+			<p class="mt-5 max-w-4xl mx-auto text-base text-gray-500">
+				由於推特（Ｘ）的 HashTag 一直都沒修好, 導致查詢時會遺漏,
+				所以做了一個連結自己畫的粉絲圖的網站...
+			</p>
+			<p class="mt-5 max-w-4xl mx-auto text-base text-gray-500">
+				Twitter（X）のハッシュタグがずっと直らなくて、検索するとどうしても抜け漏れが出ちゃうので、自分の描いたファンアートをまとめて見られるサイトを作りました……
+			</p>
+			{lastUpdated && (
+				<p class="mt-2 max-w-4xl mx-auto text-[14px] text-blue-500">
+					Updated: {lastUpdated}
+				</p>
+			)}
+		</div>
+	</section>
+	<Gallery client:load />
 </Layout>
