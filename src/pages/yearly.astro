@@ -3,6 +3,9 @@ import Layout from "../layouts/Layout.astro";
 import YearlyGallery from "../components/Yearly.svelte";
 ---
 
-<Layout title="年度表 - DIANAxAKKO Fan Art Gallery">
-    <YearlyGallery client:only="svelte" />
+<Layout
+    title="年度表 - DIANAxAKKO Fan Art Gallery"
+    description="依年份與月份瀏覽 DIANAxAKKO Fan Art Gallery 的粉絲創作年度回顧表。"
+>
+    <YearlyGallery client:load />
 </Layout>

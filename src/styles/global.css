@@ -1,25 +1,7 @@
 @import "tailwindcss";
 
 html,
-body,
-#__nuxt {
-  word-break: break-word;
-  @apply h-full
-}
-
-html {
-  @apply break-all
-}
-
-.ck-content * {
-  all: revert;
-  @apply text-[16px]
-}
-
-.ck-content img, .ck-content picture {
-  @apply max-w-full
-}
-
-.ck-content iframe {
-  @apply aspect-video max-w-full
+body {
+  height: 100%;
+  overflow-wrap: break-word;
 }

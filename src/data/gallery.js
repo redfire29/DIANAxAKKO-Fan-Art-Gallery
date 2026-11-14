@@ -12,13 +12,13 @@ export const galleryImages = [
     link: 'https://x.com/redfire299/status/2117995419037003952'
   },
   {
-    date: '2026/11/1',
+    date: '2026/11/01',
     url: '/DIANAxAKKO-Fan-Art-Gallery/gallery/20261101-HV-EsiSaQAA4cpL.webp',
     hashtags: ['うみコレオ', '2026'],
     link: 'https://x.com/redfire299/status/2116556324565897647'
   },
   {
-    date: '2026/10/1',
+    date: '2026/10/01',
     url: '/DIANAxAKKO-Fan-Art-Gallery/gallery/20261001-HTeTB7kboAA7V7r.webp',
     hashtags: ['うみコレオ', '2026'],
     link: 'https://x.com/redfire299/status/2105313041151877428'
@@ -108,13 +108,13 @@ export const galleryImages = [
     link: 'https://x.com/redfire299/status/2064715770278592563'
   },
   {
-    date: '2026/06/5',
+    date: '2026/06/05',
     url: '/DIANAxAKKO-Fan-Art-Gallery/gallery/20260605-HKD68ZzbAAAKDqu.webp',
     hashtags: ['うみコレオ', '2026'],
     link: 'https://x.com/redfire299/status/2062925243086414001'
   },
   {
-    date: '2026/06/1',
+    date: '2026/06/01',
     url: '/DIANAxAKKO-Fan-Art-Gallery/gallery/20260601-HJrbboLagAATVHG.webp',
     hashtags: ['うみコレオ', '2026'],
     link: 'https://x.com/redfire299/status/2061201050955346382'

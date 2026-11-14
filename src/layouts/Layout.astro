@@ -1,17 +1,33 @@
 ---
 import "../styles/global.css";
+import { galleryImages } from "../data/gallery";
+
+const latestImage = galleryImages.find((item) => item.url)?.url;
 
 const {
     title = "DIANAxAKKO Fan Art Gallery",
     description = "DIANAxAKKO Fan Art Gallery - 收集關於 DIANA 與 AKKO 的粉絲創作。",
+    ogImage = latestImage,
 } = Astro.props;
+
 const pathname = Astro.url.pathname;
 const base = import.meta.env.BASE_URL;
+const normalizedBase = base === "/" ? "" : base.replace(/\/$/, "");
 const homeUrl = base;
-const yearlyUrl = base === "/" ? "/yearly" : `${base}/yearly`;
+const yearlyUrl = `${normalizedBase}/yearly`;
 
-const isHome = pathname === base || pathname === `${base}/`;
+const isHome = pathname === base || pathname === `${normalizedBase}/`;
 const isYearly = pathname.startsWith(yearlyUrl);
+
+const canonicalUrl = Astro.site
+    ? new URL(pathname, Astro.site).toString()
+    : Astro.url.href;
+
+const ogImageUrl = ogImage
+    ? Astro.site
+        ? new URL(ogImage, Astro.site).toString()
+        : ogImage
+    : undefined;
 ---
 
 <html lang="zh-TW">
@@ -20,28 +36,47 @@ const isYearly = pathname.startsWith(yearlyUrl);
         <link
             rel="icon"
             type="image/svg+xml"
-            href={`${base === "/" ? "" : base}/favicon.svg`}
+            href={`${normalizedBase}/favicon.svg`}
         />
-        <link rel="icon" href={`${base === "/" ? "" : base}/favicon.ico`} />
-        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" href={`${normalizedBase}/favicon.ico`} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
         <meta name="description" content={description} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="zh_TW" />
+        <meta property="og:site_name" content="DIANAxAKKO Fan Art Gallery" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
+        {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
     </head>
     <body class="flex flex-col min-h-screen bg-gray-50">
         <header class="bg-white shadow-sm z-20 sticky top-0">
             <nav
+                aria-label="主導覽"
                 class="max-w-7xl mx-auto 2xl:max-w-[1920px] px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
             >
                 <div class="flex items-center gap-8">
                     <div class="flex gap-4">
                         <a
                             href={homeUrl}
+                            aria-current={isHome ? "page" : undefined}
                             class={`text-sm font-medium transition-colors ${isHome ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
                             >首頁</a
                         >
                         <a
                             href={yearlyUrl}
+                            aria-current={isYearly ? "page" : undefined}
                             class={`text-sm font-medium transition-colors ${isYearly ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}`}
                             >年度表</a
                         >
