@@ -8,9 +8,18 @@
   let selectedTags = $state([]);
   let selectedYear = $state("全部年份");
   let scrollY = $state(0);
+  // 預設以桌機 5 欄作為 SSR 基準，掛載後透過 bind:innerWidth 即時同步視窗寬度
+  let innerWidth = $state(1280);
 
   let isModalOpen = $state(false);
   let selectedIndex = $state(0);
+
+  let columnCount = $derived.by(() => {
+    if (innerWidth >= 1280) return 5;
+    if (innerWidth >= 1024) return 3;
+    if (innerWidth >= 640) return 2;
+    return 1;
+  });
 
   const availableYears = [
     ...new Set(
@@ -43,6 +52,15 @@
       return true;
     })
   );
+
+  // 依序橫向輪流分配至各欄，確保由左至右、由上至下符合時間順序
+  let columns = $derived.by(() => {
+    const cols = Array.from({ length: columnCount }, () => []);
+    filteredImages.forEach((image, index) => {
+      cols[index % columnCount].push(image);
+    });
+    return cols;
+  });
 
   let hashtags = $derived(
     (() => {
@@ -104,7 +122,7 @@
   };
 </script>
 
-<svelte:window bind:scrollY />
+<svelte:window bind:scrollY bind:innerWidth />
 
 <div class="pb-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto 2xl:max-w-[1920px]">
@@ -204,16 +222,18 @@
       </div>
     </div>
 
-    <!-- 作品瀑布流（純 CSS Masonry） -->
+    <!-- 作品瀑布流（橫向時間順序分欄 Masonry） -->
     {#if filteredImages.length > 0}
-      <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-5 gap-6">
-        {#each filteredImages as image (getItemKey(image))}
-          <div class="break-inside-avoid mb-6">
-            <GalleryCard
-              {image}
-              onTagClick={handleCardTagClick}
-              onImageClick={openModal}
-            />
+      <div class="flex gap-6 items-start">
+        {#each columns as col, colIdx (colIdx)}
+          <div class="flex-1 min-w-0 flex flex-col gap-6">
+            {#each col as image (getItemKey(image))}
+              <GalleryCard
+                {image}
+                onTagClick={handleCardTagClick}
+                onImageClick={openModal}
+              />
+            {/each}
           </div>
         {/each}
       </div>
