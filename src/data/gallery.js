@@ -1,5 +1,11 @@
 export const galleryImages = [
   {
+    date: '2026/11/14',
+    url: '/DIANAxAKKO-Fan-Art-Gallery/gallery/20261114-HXA3ZK5bIAAeJh2.webp',
+    hashtags: ['しゆのアトリエ', '2026'],
+    link: 'https://x.com/redfire299/status/2121256910573928484'
+  },
+  {
     date: '2026/11/05',
     url: '/DIANAxAKKO-Fan-Art-Gallery/gallery/20261105-HWScfMRasAAAqgr.webp',
     hashtags: ['あか絵るら', '2026'],

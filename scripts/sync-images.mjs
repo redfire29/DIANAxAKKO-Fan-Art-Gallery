@@ -72,7 +72,7 @@ async function main() {
       fullMatch: match[0],
       date: match[1],
       oldUrl: match[2],
-      mediaId: match[3]
+      mediaId: match[3].replace(/\.[a-zA-Z0-9]+$/, '')
     });
   }
 
